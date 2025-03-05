@@ -6,4 +6,4 @@ class RidesFilter {
   });
 }
 
-enum RideSortType { departureTime, duration, availableSeats }
+enum RideSortType { departureTime, duration, availableSeats, departure, departureDate, arrival, requestedSeats }
