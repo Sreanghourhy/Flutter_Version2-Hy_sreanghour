@@ -1,5 +1,5 @@
 import '../model/post.dart';
 
 abstract class PostRepository {
-  Future<List<Post>> getPost();
+  Future<Post> getPost(int postId);
 }

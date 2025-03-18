@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/course_model.dart';
+import '../models/course.dart';
 import 'course_screen.dart';
-import '../provider/courses_provider.dart';
 
 const Color mainColor = Colors.blue;
 
@@ -13,19 +12,11 @@ class CourseListScreen extends StatefulWidget {
 }
 
 class _CourseListScreenState extends State<CourseListScreen> {
-  // final List<Course> _allCourses = [Course(name: 'HTML'), Course(name: 'JAVA')];
-  final CoursesProvider _coursesProvider = CoursesProvider();
-  List<Course> _allCourses = [];
-  @override
-  void initState() {
-    super.initState();
-    _allCourses = _coursesProvider.getCourses();
-  }
+  final List<Course> _allCourses = [Course(name: 'HTML'), Course(name: 'JAVA')];
 
-  void _editCourse(Course id) async {
+  void _editCourse(Course course) async {
     await Navigator.of(context).push<Course>(
-      MaterialPageRoute(
-          builder: (ctx) => CourseScreen(course: _coursesProvider, id: id)),
+      MaterialPageRoute(builder: (ctx) => CourseScreen(course: course)),
     );
 
     setState(() {
@@ -43,13 +34,14 @@ class _CourseListScreenState extends State<CourseListScreen> {
       ),
       body: ListView.builder(
         itemCount: _allCourses.length,
-        itemBuilder: (ctx, index) => Dismissible(
-          key: Key(_allCourses[index].name),
-          child: CourseTile(
-            course: _allCourses[index],
-            onEdit: _editCourse,
-          ),
-        ),
+        itemBuilder:
+            (ctx, index) => Dismissible(
+              key: Key(_allCourses[index].name),
+              child: CourseTile(
+                course: _allCourses[index],
+                onEdit: _editCourse,
+              ),
+            ),
       ),
     );
   }

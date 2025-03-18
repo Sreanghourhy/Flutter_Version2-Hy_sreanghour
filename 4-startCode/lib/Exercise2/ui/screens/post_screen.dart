@@ -18,7 +18,7 @@ class PostScreen extends StatelessWidget {
         actions: [
           IconButton(
             // 2- Fetch the post
-            onPressed: () => {postProvider.fetchPost()},
+            onPressed: () => {postProvider.fetchPost(45)},
             icon: const Icon(Icons.update),
           ),
         ],
@@ -44,11 +44,7 @@ class PostScreen extends StatelessWidget {
         return Text('Error: ${postValue.error}'); // display a error
 
       case AsyncValueState.success:
-        return ListView.builder(
-          itemCount: postValue.data!.length,
-          itemBuilder: (context, index) =>
-              PostCard(post: postValue.data![index]),
-        );
+        return PostCard(post: postValue.data!); // display the post
     }
   }
 }
@@ -60,21 +56,6 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      child: Card(
-        color: Colors.grey[200],
-        child: ListTile(
-          title: Text(
-            post.title,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          subtitle: Text(
-            post.description,
-            style: const TextStyle(color: Colors.blueGrey),
-          ),
-        ),
-      ),
-    );
+    return ListTile(title: Text(post.title), subtitle: Text(post.description));
   }
 }

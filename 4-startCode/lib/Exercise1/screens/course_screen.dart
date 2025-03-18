@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
-import '../models/course_model.dart';
+import '../models/course.dart';
 import 'course_score_form.dart';
-import '../provider/courses_provider.dart';
 
 class CourseScreen extends StatefulWidget {
-  const CourseScreen({super.key, required this.course, required this.id});
+  const CourseScreen({super.key, required this.course});
 
-  final Course id;
-  final CoursesProvider course;
+  final Course course;
 
   @override
   State<CourseScreen> createState() => _CourseScreenState();
 }
 
 class _CourseScreenState extends State<CourseScreen> {
-  List<CourseScore> get scores =>
-      widget.course.getCourseFor(widget.id.name).scores;
+  List<CourseScore> get scores => widget.course.scores;
 
   void _addScore() async {
-    CourseScore? newScore = await Navigator.of(context).push<CourseScore>(
+    CourseScore? newSCore = await Navigator.of(context).push<CourseScore>(
       MaterialPageRoute(builder: (ctx) => const CourseScoreForm()),
     );
 
-    if (newScore != null) {
+    if (newSCore != null) {
       setState(() {
-        widget.course.addScore(widget.id.name, newScore);
+        scores.add(newSCore);
       });
     }
   }
@@ -40,29 +37,26 @@ class _CourseScreenState extends State<CourseScreen> {
     if (scores.isNotEmpty) {
       content = ListView.builder(
         itemCount: scores.length,
-        itemBuilder: (ctx, index) => ListTile(
-          title: Text(scores[index].studentName),
-          trailing: Text(
-            scores[index].studenScore.toString(),
-            style: TextStyle(
-              color: scoreColor(scores[index].studenScore),
-              fontSize: 15,
+        itemBuilder:
+            (ctx, index) => ListTile(
+              title: Text(scores[index].studentName),
+              trailing: Text(
+                scores[index].studenScore.toString(),
+                style: TextStyle(
+                  color: scoreColor(scores[index].studenScore),
+                  fontSize: 15,
+                ),
+              ),
             ),
-          ),
-        ),
       );
     }
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
         backgroundColor: mainColor,
         title: Text(
-          widget.id.name,
+          widget.course.name,
           style: const TextStyle(color: Colors.white),
         ),
         actions: [
