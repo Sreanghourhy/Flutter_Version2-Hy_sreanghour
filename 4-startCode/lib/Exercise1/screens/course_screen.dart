@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../provider/courses_provider.dart';
 import '../models/course.dart';
 import 'course_score_form.dart';
 
-class CourseScreen extends StatefulWidget {
-  const CourseScreen({super.key, required this.course});
+class CourseScreen extends StatelessWidget {
+  const CourseScreen({super.key, required this.courseName});
 
-  final Course course;
+  final String courseName;
 
-  @override
-  State<CourseScreen> createState() => _CourseScreenState();
-}
+  void _addScore(BuildContext context, Course course) async {
+    final CourseScore? newScore = await Navigator.of(
+      context,
+    ).push<CourseScore>(MaterialPageRoute(builder: (ctx) => CourseScoreForm()));
 
-class _CourseScreenState extends State<CourseScreen> {
-  List<CourseScore> get scores => widget.course.scores;
-
-  void _addScore() async {
-    CourseScore? newSCore = await Navigator.of(context).push<CourseScore>(
-      MaterialPageRoute(builder: (ctx) => const CourseScoreForm()),
-    );
-
-    if (newSCore != null) {
-      setState(() {
-        scores.add(newSCore);
-      });
+    if (newScore != null) {
+      Provider.of<CourseProvider>(
+        context,
+        listen: false,
+      ).addScore(courseName, newScore);
     }
   }
 
@@ -32,6 +28,10 @@ class _CourseScreenState extends State<CourseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final coursesProvider = Provider.of<CourseProvider>(context);
+    final course = coursesProvider.getCourseFor(courseName);
+    final scores = course.scores;
+
     Widget content = const Center(child: Text('No Scores added yet.'));
 
     if (scores.isNotEmpty) {
@@ -55,12 +55,12 @@ class _CourseScreenState extends State<CourseScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: mainColor,
-        title: Text(
-          widget.course.name,
-          style: const TextStyle(color: Colors.white),
-        ),
+        title: Text(course.name, style: const TextStyle(color: Colors.white)),
         actions: [
-          IconButton(onPressed: _addScore, icon: const Icon(Icons.add)),
+          IconButton(
+            onPressed: () => _addScore(context, course),
+            icon: const Icon(Icons.add),
+          ),
         ],
       ),
       body: content,
