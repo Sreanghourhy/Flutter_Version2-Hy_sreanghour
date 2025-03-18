@@ -10,53 +10,46 @@ class PostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 1 - Get the post provider
+    //  1 - Get the post provider
     final PostProvider postProvider = Provider.of<PostProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
-            // 2- Fetch posts
-            onPressed: () => {postProvider.fetchPost()},
+            // 2- Fetch the post
+            onPressed: () => {postProvider.fetchPost(45)},
             icon: const Icon(Icons.update),
           ),
         ],
       ),
-      // 3 - Display the posts
+
+      // 3 -  Display the post
       body: Center(child: _buildBody(postProvider)),
     );
   }
 
-  Widget _buildBody(PostProvider postProvider) {
-    final postValue = postProvider.postValue;
+  Widget _buildBody(PostProvider courseProvider) {
+    final postValue = courseProvider.postValue;
 
-    // Case 1: No async data yet
     if (postValue == null) {
-      return const Text('Tap refresh to display posts');
+      return Text('Tap refresh to display posts');
     }
 
-    // Case 2: Handle different states
     switch (postValue.state) {
       case AsyncValueState.loading:
-        return const CircularProgressIndicator();
+        return CircularProgressIndicator();
 
       case AsyncValueState.error:
         return Text('Error: ${postValue.error}');
 
       case AsyncValueState.success:
-        // Case 3: Empty list
         if (postValue.data!.isEmpty) {
-          return const Text('No posts available');
+          return Text('No posts available');
         }
-
-        // Case 4: Display list of posts
-        return ListView.builder(
-          itemCount: postValue.data!.length,
-          itemBuilder: (context, index) {
-            return PostCard(post: postValue.data![index]);
-          },
-        );
+        return PostCard(
+          post: postValue.data![0],
+        ); // Display first post from list
     }
   }
 }
@@ -68,12 +61,6 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: ListTile(
-        title: Text(post.title),
-        subtitle: Text(post.description),
-      ),
-    );
+    return ListTile(title: Text(post.title), subtitle: Text(post.description));
   }
 }
