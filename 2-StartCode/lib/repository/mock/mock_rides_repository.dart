@@ -58,38 +58,6 @@ class MockRidesRepository implements RidesRepository {
     // Get filtered rides based on preference
     List<Ride> rides = RidesService.getRidesFor(preference);
 
-    // Apply sorting if sort type is provided
-    if (sortType != null) {
-      switch (sortType) {
-        case RideSortType.departure:
-          rides.sort(
-            (a, b) =>
-                a.departureLocation.name.compareTo(b.departureLocation.name),
-          );
-          break;
-        case RideSortType.departureDate:
-          rides.sort((a, b) => a.departureDate.compareTo(b.departureDate));
-          break;
-        case RideSortType.arrival:
-          rides.sort(
-            (a, b) => a.arrivalLocation.name.compareTo(b.arrivalLocation.name),
-          );
-          break;
-        case RideSortType.requestedSeats:
-          rides.sort((a, b) => b.availableSeats.compareTo(a.availableSeats));
-          break;
-        case RideSortType.departureTime:
-          // TODO: Handle this case.
-          throw UnimplementedError();
-        case RideSortType.duration:
-          // TODO: Handle this case.
-          throw UnimplementedError();
-        case RideSortType.availableSeats:
-          // TODO: Handle this case.
-          throw UnimplementedError();
-      }
-    }
-
     return rides;
   }
 }

@@ -1,6 +1,5 @@
 import 'package:blablacar/repository/mock/mock_ride_preferences_repository.dart';
 import 'package:flutter/material.dart';
-import 'screens/ride_pref/ride_pref_screen.dart';
 import 'service/ride_prefs_service.dart';
 import 'theme/theme.dart';
 

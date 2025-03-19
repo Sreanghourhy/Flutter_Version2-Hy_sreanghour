@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter2_assignment/screens/ride_pref/test_screen.dart';
 import 'screens/ride_pref/ride_pref_screen.dart';
 import 'theme/theme.dart';
 

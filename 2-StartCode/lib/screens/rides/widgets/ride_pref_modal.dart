@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../model/ride_pref/ride_pref.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/actions/bla_icon_button.dart';
-import '../../ride_pref/widgets/ride_pref_form.dart';
 
 class CustomRidePrefModal extends StatefulWidget {
   final RidePreference currentPreference;
