@@ -1,8 +1,8 @@
-# Install script for directory: /home/sunny/Documents/CADT/Flutter_Ronan-Advance/Flutter_Version2-Hy_sreanghour/GEN-09-FLUTTER-2-BLA-W7-START/linux/runner
+# Install script for directory: /home/sunny/Documents/CADT/Flutter_Ronan-Advance/Flutter_Version2-Hy_sreanghour/Ronan/linux/runner
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/sunny/Documents/CADT/Flutter_Ronan-Advance/Flutter_Version2-Hy_sreanghour/GEN-09-FLUTTER-2-BLA-W7-START/build/linux/x64/debug/bundle")
+  set(CMAKE_INSTALL_PREFIX "/home/sunny/Documents/CADT/Flutter_Ronan-Advance/Flutter_Version2-Hy_sreanghour/Ronan/build/linux/x64/debug/bundle")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

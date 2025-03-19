@@ -42,7 +42,7 @@ rule CXX_EXECUTABLE_LINKER__week_3_blabla_project_Debug
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /usr/bin/cmake --regenerate-during-build -S/home/sunny/Documents/CADT/Flutter_Ronan-Advance/Flutter_Version2-Hy_sreanghour/GEN-09-FLUTTER-2-BLA-W7-START/linux -B/home/sunny/Documents/CADT/Flutter_Ronan-Advance/Flutter_Version2-Hy_sreanghour/GEN-09-FLUTTER-2-BLA-W7-START/build/linux/x64/debug
+  command = /usr/bin/cmake --regenerate-during-build -S/home/sunny/Documents/CADT/Flutter_Ronan-Advance/Flutter_Version2-Hy_sreanghour/Ronan/linux -B/home/sunny/Documents/CADT/Flutter_Ronan-Advance/Flutter_Version2-Hy_sreanghour/Ronan/build/linux/x64/debug
   description = Re-running CMake...
   generator = 1
 
