@@ -14,7 +14,7 @@ class PostProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      List<Post> posts = await _repository.getPost(postId);
+      List<Post> posts = await _repository.getPost();
       postValue = AsyncValue.success(posts);
     } catch (error) {
       postValue = AsyncValue.error(error);
