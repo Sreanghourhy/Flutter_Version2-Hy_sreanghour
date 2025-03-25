@@ -75,10 +75,12 @@ class _RidePrefFormState extends State<RidePrefForm> {
     );
 
     // 2- Update the from if needed
-    setState(() {
-      departure = selectedLocation;
-    });
+    if (selectedLocation != null) {
+      setState(() {
+        departure = selectedLocation;
+      });
     }
+  }
 
   void onArrivalPressed() async {
     // 1- Select a location
@@ -89,10 +91,12 @@ class _RidePrefFormState extends State<RidePrefForm> {
     );
 
     // 2- Update the from if needed
-    setState(() {
-      arrival = selectedLocation;
-    });
+    if (selectedLocation != null) {
+      setState(() {
+        arrival = selectedLocation;
+      });
     }
+  }
 
   void onSubmit() {
     // 1- Check input validity

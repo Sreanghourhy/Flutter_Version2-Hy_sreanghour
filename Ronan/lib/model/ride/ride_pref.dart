@@ -10,34 +10,26 @@ class RidePreference {
   final Location arrival;
   final int requestedSeats;
 
-  const RidePreference({
-    required this.departure,
-    required this.departureDate,
-    required this.arrival,
-    required this.requestedSeats
-  });
+  const RidePreference(
+      {required this.departure,
+      required this.departureDate,
+      required this.arrival,
+      required this.requestedSeats});
 
-  @override
+   @override
   bool operator ==(Object other) {
-    if (identical(this, other)) return true;
+    if (identical(this, other)) return true;// Fast path:check if same object
     return other is RidePreference &&
-           other.departure == departure &&
-           other.departureDate == departureDate &&
-           other.arrival == arrival &&
-           other.requestedSeats == requestedSeats;
+        other.departure == departure &&
+        other.departureDate == departureDate &&
+        other.arrival == arrival &&
+        other.requestedSeats == requestedSeats;
   }
-
+// hash code is a number that identifies an object
   @override
-  int get hashCode => departure.hashCode ^
-                      departureDate.hashCode ^
-                      arrival.hashCode ^
-                      requestedSeats.hashCode;
-
-  @override
-  String toString() {
-    return 'RidePref(departure: ${departure.name}, '
-        'departureDate: ${departureDate.toIso8601String()}, '
-        'arrival: ${arrival.name}, '
-        'requestedSeats: $requestedSeats)';
-  }
+  int get hashCode =>
+      departure.hashCode ^  // location
+      departureDate.hashCode ^
+      arrival.hashCode ^ // location 
+      requestedSeats.hashCode;
 }
