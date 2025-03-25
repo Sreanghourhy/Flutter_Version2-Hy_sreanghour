@@ -1,40 +1,58 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../model/ride/ride_pref.dart';
 import '../../repository/ride_preferences_repository.dart';
 
-class RidesPreferencesProvider extends ChangeNotifier {
+class RidesPrefProvider extends ChangeNotifier {
   RidePreference? _currentPreference;
   List<RidePreference> _pastPreferences = [];
   final RidePreferencesRepository repository;
-  RidesPreferencesProvider({required this.repository}) {
-    // For now past preferences are fetched only 1 time
+
+  // Constructor that loads past preferences when provider is created
+  RidesPrefProvider({required this.repository}) {
     _loadPastPreferences();
   }
+
+  // Getter for current preference
+  RidePreference? get currentPreference => _currentPreference;
+
+  // Getter for past preferences history
+  List<RidePreference> get preferencesHistory => _pastPreferences;
+
+  // Load past preferences from repository
   Future<void> _loadPastPreferences() async {
-    try{
-      _pastPreferences = await repository.getPastPreferences();
+    try {
+      _pastPreferences = repository.getPastPreferences();
       notifyListeners();
-    } catch(e) {
+    } catch (e) {
       print('Error loading past preferences: $e');
     }
   }
 
-  RidePreference? get currentPreference => _currentPreference;
-  void setCurrentPreferrence(RidePreference pref) {
-    if (_currentPreference != null) {
-      _addPreference(_currentPreference!);
+  // Method to set current preference
+  void setCurrentPreferrence(RidePreference newPreference) {
+    // 1. Check if new preference is different from current
+    if (_currentPreference == newPreference) {
+      return; // Exit if same preference
     }
-    _currentPreference = pref;
-    notifyListeners();
-  }
-  void _addPreference(RidePreference preference) {
-    _pastPreferences.add(preference);
-    repository.addPreference(preference);
+
+    // 2. Save current preference to history before updating
+    if (_currentPreference != null) {
+      _savePreviousPreference(_currentPreference!);
+    }
+
+    // 3. Update current preference
+    _currentPreference = newPreference;
+
+    // 4. Notify listeners of the change
     notifyListeners();
   }
 
-  // History is returned from newest to oldest preference
-  List<RidePreference> get preferencesHistory =>
-      _pastPreferences.reversed.toList();
+  // Helper method to save preference to history
+  void _savePreviousPreference(RidePreference preference) {
+    if (!_pastPreferences.contains(preference)) {  // Only add if not already in history
+      _pastPreferences.insert(0, preference);  // Add to beginning of list (newest first)
+
+    }
+  }
 }
