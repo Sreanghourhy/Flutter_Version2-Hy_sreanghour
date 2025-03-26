@@ -19,17 +19,18 @@ import 'ride_pref_input_tile.dart';
 ///
 /// The form can be created with an existing RidePref (optional).
 ///
-class RidePrefForm extends StatefulWidget {
-  const RidePrefForm( {super.key, required this.initialPreference, required this.onSubmit});
+class CustomRidePrefForm extends StatefulWidget {
+  const CustomRidePrefForm(
+      {super.key, required this.initialPreference, required this.onSubmit});
 
   final RidePreference? initialPreference;
   final Function(RidePreference preference) onSubmit;
 
   @override
-  State<RidePrefForm> createState() => _RidePrefFormState();
+  State<CustomRidePrefForm> createState() => _RidePrefFormState();
 }
 
-class _RidePrefFormState extends State<RidePrefForm> {
+class _RidePrefFormState extends State<CustomRidePrefForm> {
   Location? departure;
   late DateTime departureDate;
   Location? arrival;
@@ -42,7 +43,7 @@ class _RidePrefFormState extends State<RidePrefForm> {
   @override
   void initState() {
     super.initState();
- 
+
     if (widget.initialPreference != null) {
       RidePreference current = widget.initialPreference!;
       departure = current.departure;
@@ -93,6 +94,10 @@ class _RidePrefFormState extends State<RidePrefForm> {
   }
 
   void onSubmit() {
+    print(departure);
+    print(arrival);
+    print(departureDate);
+
     // 1- Check input validity
     bool hasDeparture = departure != null;
     bool hasArrival = arrival != null;

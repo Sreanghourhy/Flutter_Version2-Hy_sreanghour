@@ -1,3 +1,4 @@
+import 'package:blablacar/service/rides_service.dart';
 import 'package:flutter/material.dart';
 
 import '../../model/ride_pref/ride_pref.dart';
@@ -16,32 +17,42 @@ const String blablaHomeImagePath = 'assets/images/blabla_home.png';
 /// - Enter his/her ride preference and launch a search on it
 /// - Or select a last entered ride preferences and launch a search on it
 ///
-class RidePrefScreen extends StatefulWidget {
-  const RidePrefScreen({super.key});
+class CustomRidePrefScreen extends StatefulWidget {
+  const CustomRidePrefScreen({super.key});
 
   @override
-  State<RidePrefScreen> createState() => _RidePrefScreenState();
+  State<CustomRidePrefScreen> createState() => _RidePrefScreenState();
 }
 
-class _RidePrefScreenState extends State<RidePrefScreen> {
- 
-  onRidePrefSelected(RidePreference newPreference) async {
+class _RidePrefScreenState extends State<CustomRidePrefScreen> {
+  final RidesService ridesService = RidesService();
+  RidePreference? currentRidePreference =
+      RidePrefService.instance.currentPreference;
+  var _rebuildKey = UniqueKey();
 
+  onRidePrefSelected(RidePreference newPreference) async {
     // 1 - Update the current preference
     RidePrefService.instance.setCurrentPreference(newPreference);
- 
+
     // 2 - Navigate to the rides screen (with a buttom to top animation)
-    await Navigator.of(context).push(AnimationUtils.createBottomToTopRoute(RidesScreen()));
-  
+    await Navigator.of(
+      context,
+    ).push(AnimationUtils.createBottomToTopRoute(RidesScreen()));
+
     // 3 - After wait  - Update the state   -- TODO MAKE IT WITH STATE MANAGEMENT
-    setState(() { });
+    setState(() {
+      currentRidePreference = RidePrefService.instance.currentPreference;
+      // Force rebuild by updating the key
+      _rebuildKey = UniqueKey();
+      print("RidePrefScreen - onRidePrefSelected - currentRidePreference");
+      print(currentRidePreference);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-
-    RidePreference? currentRidePreference = RidePrefService.instance.currentPreference;
-    List<RidePreference> pastPreferences = RidePrefService.instance.getPastPreferences();
+    List<RidePreference> pastPreferences =
+        RidePrefService.instance.getPastPreferences();
 
     return Stack(
       children: [
@@ -68,7 +79,11 @@ class _RidePrefScreenState extends State<RidePrefScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // 2.1 Display the Form to input the ride preferences
-                  RidePrefForm(initialPreference: currentRidePreference, onSubmit: onRidePrefSelected),
+                  RidePrefForm(
+                    key: _rebuildKey,
+                    initialPreference: currentRidePreference,
+                    onSubmit: onRidePrefSelected,
+                  ),
                   SizedBox(height: BlaSpacings.m),
 
                   // 2.2 Optionally display a list of past preferences

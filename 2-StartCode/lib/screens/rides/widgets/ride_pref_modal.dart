@@ -1,30 +1,32 @@
-import 'package:blablacar/widgets/actions/bla_icon_button.dart' show BlaIconButton;
 import 'package:flutter/material.dart';
-// import 'package:week_3_blabla_project/widgets/actions/bla_icon_button.dart';
 
 import '../../../model/ride_pref/ride_pref.dart';
 import '../../../theme/theme.dart';
+import '../../../widgets/actions/bla_icon_button.dart';
 import '../../ride_pref/widgets/ride_pref_form.dart';
 
-class RidePrefModal extends StatefulWidget {
+class CustomRidePrefModal extends StatefulWidget {
+  final RidePreference currentPreference;
 
-  const RidePrefModal({
-
-    super.key,     
-     // TODO 7 : We should pass the current prefs to this moda; 
+  const CustomRidePrefModal({
+    super.key,
+    required this.currentPreference,
+    // TODO 7 : We should pass the current prefs to this moda;
   });
- 
+
   @override
-  State<RidePrefModal> createState() => _RidePrefModalState();
+  State<CustomRidePrefModal> createState() => _RidePrefModalState();
 }
 
-class _RidePrefModalState extends State<RidePrefModal> {
+class _RidePrefModalState extends State<CustomRidePrefModal> {
   void onBackSelected() {
     Navigator.of(context).pop();
   }
 
   void onSubmit(RidePreference newPreference) {
-      // TODO 9 : We should pop this modal, with the new current preference
+    // TODO 9 : We should pop this modal, with the new current preference
+    print("TODO 9 New preference submitted : $newPreference");
+    Navigator.of(context).pop(newPreference);
   }
 
   @override
@@ -52,7 +54,8 @@ class _RidePrefModalState extends State<RidePrefModal> {
               child: Padding(
             padding: const EdgeInsets.all(10),
             child: RidePrefForm(
-              initialPreference: null,        // TODO 7 : The form should be displayed with the modal current prefs
+              initialPreference: widget
+                  .currentPreference, // TODO 7 : The form should be displayed with the modal current prefs
               onSubmit: onSubmit,
             ),
           )),

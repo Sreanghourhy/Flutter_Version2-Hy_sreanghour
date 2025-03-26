@@ -1,6 +1,6 @@
-import '../model/ride/locations.dart';
+import '../model/location/locations.dart';
 import '../model/ride/ride.dart';
-import '../model/ride_pref/ride_pref.dart';
+import '../model/ride/ride_pref.dart';
 import '../model/user/user.dart';
 import 'dart:math';
 
@@ -53,13 +53,6 @@ const List<Location> fakeLocations = [
   Location(name: "Dijon", country: Country.france),
   Location(name: "Le Havre", country: Country.france),
   Location(name: "Brest", country: Country.france),
-
-  // Cambodia Cities
-  Location(name: 'Phnom Penh', country: Country.cambodia),
-  Location(name: 'Siem Reap', country: Country.cambodia),
-  Location(name: 'Battambang', country: Country.cambodia),
-  Location(name: 'Sihanoukville', country: Country.cambodia),
-  Location(name: 'Kampot', country: Country.cambodia),
 ];
 
 // Fake Ride Preferences
@@ -95,33 +88,9 @@ List<RidePreference> fakeRidePrefs = [
     requestedSeats: 3,
   ),
   RidePreference(
-    departure: fakeLocations[40], // Battambang
-    arrival: fakeLocations[39], // Siem Reap
-    departureDate: DateTime.now().add(Duration(hours: 5, minutes: 30)),
-    requestedSeats: 2,
-  ),
-  RidePreference(
-    departure: fakeLocations[40], // Battambang
-    arrival: fakeLocations[39], // Siem Reap
-    departureDate: DateTime.now().add(Duration(hours: 8)),
-    requestedSeats: 0,
-  ),
-  RidePreference(
-    departure: fakeLocations[40], // Battambang
-    arrival: fakeLocations[39], // Siem Reap
-    departureDate: DateTime.now().add(Duration(hours: 5)),
-    requestedSeats: 1,
-  ),
-  RidePreference(
-    departure: fakeLocations[40], // Battambang
-    arrival: fakeLocations[39], // Siem Reap
-    departureDate: DateTime.now().add(Duration(hours: 8)),
-    requestedSeats: 2,
-  ),
-  RidePreference(
-    departure: fakeLocations[40], // Battambang
-    arrival: fakeLocations[39], // Siem Reap
-    departureDate: DateTime.now().add(Duration(hours: 5)),
+    departure: fakeLocations[5], // Birmingham
+    departureDate: DateTime.now(), // Today
+    arrival: fakeLocations[1], // Marseille
     requestedSeats: 1,
   ),
 ];
@@ -193,12 +162,10 @@ List<Ride> fakeRides = List.generate(50, (index) {
   User driver = fakeUsers[random.nextInt(fakeUsers.length)];
 
   // Random ride details
-  DateTime departureTime = DateTime.now().add(
-    Duration(days: random.nextInt(10), hours: random.nextInt(24)),
-  );
-  DateTime arrivalTime = departureTime.add(
-    Duration(hours: random.nextInt(5) + 2),
-  ); // Rides take 2-6 hours
+  DateTime departureTime = DateTime.now()
+      .add(Duration(days: random.nextInt(10), hours: random.nextInt(24)));
+  DateTime arrivalTime = departureTime
+      .add(Duration(hours: random.nextInt(5) + 2)); // Rides take 2-6 hours
   int availableSeats = random.nextInt(4) + 1; // Between 1 and 4 seats
   double pricePerSeat = (random.nextDouble() * 20 + 5)
       .roundToDouble(); // Price between 5€ and 25€
