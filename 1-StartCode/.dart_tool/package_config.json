@@ -57,9 +57,9 @@
     },
     {
       "name": "flutter_lints",
-      "rootUri": "file:///home/sunny/.pub-cache/hosted/pub.dev/flutter_lints-5.0.0",
+      "rootUri": "file:///home/sunny/.pub-cache/hosted/pub.dev/flutter_lints-4.0.0",
       "packageUri": "lib/",
-      "languageVersion": "3.5"
+      "languageVersion": "3.1"
     },
     {
       "name": "flutter_svg",
@@ -111,9 +111,9 @@
     },
     {
       "name": "lints",
-      "rootUri": "file:///home/sunny/.pub-cache/hosted/pub.dev/lints-5.1.1",
+      "rootUri": "file:///home/sunny/.pub-cache/hosted/pub.dev/lints-4.0.0",
       "packageUri": "lib/",
-      "languageVersion": "3.6"
+      "languageVersion": "3.1"
     },
     {
       "name": "matcher",
@@ -242,13 +242,13 @@
       "languageVersion": "3.2"
     },
     {
-      "name": "blablacar",
+      "name": "flutter2_assignment",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.5"
     }
   ],
-  "generated": "2025-03-26T03:31:01.718350Z",
+  "generated": "2025-03-26T03:31:00.211927Z",
   "generator": "pub",
   "generatorVersion": "3.6.0",
   "flutterRoot": "file:///home/sunny/flutter",
