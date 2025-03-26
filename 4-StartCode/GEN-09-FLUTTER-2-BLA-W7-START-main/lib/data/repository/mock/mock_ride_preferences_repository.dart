@@ -1,5 +1,5 @@
-import '../../dummy_data/dummy_data.dart';
-import '../../model/ride/ride_pref.dart';
+import '../../dto/dummy_data.dart';
+import '../../../model/ride/ride_pref.dart';
 
 final List<RidePreference> _pastPreferences = fakeRidePrefs;
 

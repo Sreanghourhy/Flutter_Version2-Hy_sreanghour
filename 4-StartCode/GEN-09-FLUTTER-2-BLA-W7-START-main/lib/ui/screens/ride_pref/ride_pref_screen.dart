@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:week_3_blabla_project/repository/mock/mock_ride_preferences_repository.dart';
-import 'package:week_3_blabla_project/repository/ride_preferences_repository.dart';
+import 'package:week_3_blabla_project/data/repository/mock/mock_ride_preferences_repository.dart';
+import 'package:week_3_blabla_project/data/repository/ride_preferences_repository.dart';
 import '../../../model/ride/ride_pref.dart';
 import '../../provider/asyn_value.dart';
 import '../../provider/provider_ride_pref_screen.dart';
