@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import 'async_value.dart';
+import 'fruit_form.dart';
 
 // REPOS
 abstract class FruitRepository {
@@ -175,8 +176,11 @@ class App extends StatelessWidget {
   const App({super.key});
 
   void _onAddPressed(BuildContext context) {
-    final FruitProvider fruitProvider = context.read<FruitProvider>();
-    fruitProvider.addFruit("blue", 3.1);
+    Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => const FruitForm(),
+     )
+    );
   }
 
   @override
@@ -198,12 +202,26 @@ class App extends StatelessWidget {
               (context, index) => ListTile(
                 title: Text(fruits[index].color),
                 subtitle: Text("${fruits[index].price}"),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red),
-                  onPressed: () {
-                        final FruitProvider fruitProvider = context.read<FruitProvider>();
-                        fruitProvider.removeFruit(fruits[index].id); // Pass the fruit ID
-                  },
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.edit, color: Colors.blue),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => FruitForm(fruit: fruits[index]),
+                          ),
+                        );
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.delete, color: Colors.blue),
+                      onPressed: () {
+                        fruitProvider.removeFruit(fruits[index].id);
+                      },
+                    ),
+                  ],
                 ),
               ),
         );
