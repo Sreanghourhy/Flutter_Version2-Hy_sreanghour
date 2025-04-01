@@ -9,98 +9,116 @@ import 'package:provider/provider.dart';
 import 'async_value.dart';
 
 // REPOS
-abstract class PancakeRepository {
-  Future<Pancake> addPancake({required String color, required double price});
-  Future<List<Pancake>> getPancakes();
+abstract class FruitRepository {
+  Future<Fruit> addFruit({required String color, required double price});
+  Future<List<Fruit>> getFruits();
+  Future<void> removeFruit(String id);
 }
 
-class FirebasePancakeRepository extends PancakeRepository {
-  static const String baseUrl = 'YOUR URL';
-  static const String pancakesCollection = "pancakes";
-  static const String allPancakesUrl = '$baseUrl/$pancakesCollection.json';
+class FirebaseFruitRepository extends FruitRepository {
+  static const String baseUrl =
+      'https://week8-beceb-default-rtdb.asia-southeast1.firebasedatabase.app';
+  static const String fruitsCollection = "fruits";
+  static const String allFruitsUrl = '$baseUrl/$fruitsCollection.json';
 
   @override
-  Future<Pancake> addPancake({required String color, required double price}) async {
-    Uri uri = Uri.parse(allPancakesUrl);
+  Future<Fruit> addFruit({required String color, required double price}) async {
+    Uri uri = Uri.parse(allFruitsUrl);
 
-    // Create a new data
-    final newPancakeData = {'color': color, 'price': price};
+    final newFruitData = {'color': color, 'price': price};
     final http.Response response = await http.post(
       uri,
       headers: {'Content-Type': 'application/json'},
-      body: json.encode(newPancakeData),
+      body: json.encode(newFruitData),
     );
 
-    // Handle errors
     if (response.statusCode != HttpStatus.ok) {
       throw Exception('Failed to add user');
     }
 
-    // Firebase returns the new ID in 'name'
     final newId = json.decode(response.body)['name'];
 
-    // Return created user
-    return Pancake(id: newId, color: color, price: price);
+    return Fruit(id: newId, color: color, price: price);
   }
 
   @override
-  Future<List<Pancake>> getPancakes() async {
-    Uri uri = Uri.parse(allPancakesUrl);
+  Future<List<Fruit>> getFruits() async {
+    Uri uri = Uri.parse(allFruitsUrl);
     final http.Response response = await http.get(uri);
 
-    // Handle errors
-    if (response.statusCode != HttpStatus.ok && response.statusCode != HttpStatus.created) {
+    if (response.statusCode != HttpStatus.ok &&
+        response.statusCode != HttpStatus.created) {
       throw Exception('Failed to load');
     }
 
-    // Return all users
     final data = json.decode(response.body) as Map<String, dynamic>?;
 
     if (data == null) return [];
-    return data.entries.map((entry) => PancakeDto.fromJson(entry.key, entry.value)).toList();
+    return data.entries
+        .map((entry) => FruitDto.fromJson(entry.key, entry.value))
+        .toList();
+  }
+
+  @override
+  Future<void> removeFruit(String id) async {
+    final Uri uri = Uri.parse('$baseUrl/$fruitsCollection/$id.json');
+    final http.Response response = await http.delete(uri);
+
+    if (response.statusCode != HttpStatus.ok &&
+        response.statusCode != HttpStatus.noContent) {
+      throw Exception('Failed to delete fruit');
+    }
   }
 }
 
-class MockPancakeRepository extends PancakeRepository {
-  final List<Pancake> pancakes = [];
+class MockFruitRepository extends FruitRepository {
+  final List<Fruit> fruits = [];
 
   @override
-  Future<Pancake> addPancake({required String color, required double price}) {
+  Future<Fruit> addFruit({required String color, required double price}) {
     return Future.delayed(Duration(seconds: 1), () {
-      Pancake newPancake = Pancake(id: "0", color: color, price: 12);
-      pancakes.add(newPancake);
-      return newPancake;
+      Fruit newFruit = Fruit(id: "0", color: color, price: 12);
+      fruits.add(newFruit);
+      return newFruit;
     });
   }
 
   @override
-  Future<List<Pancake>> getPancakes() {
-    return Future.delayed(Duration(seconds: 1), () => pancakes);
+  Future<List<Fruit>> getFruits() {
+    return Future.delayed(Duration(seconds: 1), () => fruits);
   }
+
+    @override
+  Future<void> removeFruit(String id) {
+    return Future.delayed(Duration(seconds: 1), () {
+      fruits.removeWhere((fruit) => fruit.id == id);
+    });
+  }
+
 }
 
 // MODEL & DTO
-class PancakeDto {
-  static Pancake fromJson(String id, Map<String, dynamic> json) {
-    return Pancake(id: id, color: json['color'], price: json['price']);
+class FruitDto {
+  static Fruit fromJson(String id, Map<String, dynamic> json) {
+    return Fruit(id: id, color: json['color'], price: json['price']);
   }
 
-  static Map<String, dynamic> toJson(Pancake pancake) {
-    return {'name': pancake.color, 'price': pancake.price};
+  static Map<String, dynamic> toJson(Fruit fruit) {
+    return {'name': fruit.color, 'price': fruit.price};
   }
 }
 
 // MODEL
-class Pancake {
+class Fruit {
   final String id;
   final String color;
   final double price;
 
-  Pancake({required this.id, required this.color, required this.price});
+  Fruit({required this.id, required this.color, required this.price});
 
   @override
   bool operator ==(Object other) {
-    return other is Pancake && other.id == id;
+    return other is Fruit && other.id == id;
   }
 
   @override
@@ -108,74 +126,85 @@ class Pancake {
 }
 
 // PROVIDER
-class Pancakeprovider extends ChangeNotifier {
-  final PancakeRepository _repository;
-  AsyncValue<List<Pancake>>? pancakesState;
+class FruitProvider extends ChangeNotifier {
+  final FruitRepository _repository;
+  AsyncValue<List<Fruit>>? fruitsState;
 
-  Pancakeprovider(this._repository) {
+  FruitProvider(this._repository) {
     fetchUsers();
   }
 
-  bool get isLoading => pancakesState != null && pancakesState!.state == AsyncValueState.loading;
-  bool get hasData => pancakesState != null && pancakesState!.state == AsyncValueState.success;
+  bool get isLoading =>
+      fruitsState != null && fruitsState!.state == AsyncValueState.loading;
+  bool get hasData =>
+      fruitsState != null && fruitsState!.state == AsyncValueState.success;
 
   void fetchUsers() async {
     try {
-      // 1- loading state
-      pancakesState = AsyncValue.loading();
+      fruitsState = AsyncValue.loading();
       notifyListeners();
 
-      // 2 - Fetch users
-      pancakesState = AsyncValue.success(await _repository.getPancakes());
+      fruitsState = AsyncValue.success(await _repository.getFruits());
 
-      print("SUCCESS: list size ${pancakesState!.data!.length.toString()}");
-
-      // 3 - Handle errors
+      print("SUCCESS: list size ${fruitsState!.data!.length.toString()}");
     } catch (error) {
       print("ERROR: $error");
-      pancakesState = AsyncValue.error(error);
+      fruitsState = AsyncValue.error(error);
     }
 
     notifyListeners();
   }
 
-  void addPancake(String color, double price) async {
-    // 1- Call repo to add
-    _repository.addPancake(color: color, price: price);
-
-    // 2- Call repo to fetch
+  void addFruit(String color, double price) async {
+    _repository.addFruit(color: color, price: price);
     fetchUsers();
   }
+
+void removeFruit(String id) async {
+    try {
+      await _repository.removeFruit(id);
+      fetchUsers(); // Refresh the list after removal
+    } catch (error) {
+      print("ERROR: $error");
+    }
+  }
+
 }
 
 class App extends StatelessWidget {
   const App({super.key});
 
   void _onAddPressed(BuildContext context) {
-    final Pancakeprovider pancakeProvider = context.read<Pancakeprovider>();
-    pancakeProvider.addPancake("blue", 3.1);
+    final FruitProvider fruitProvider = context.read<FruitProvider>();
+    fruitProvider.addFruit("blue", 3.1);
   }
 
   @override
   Widget build(BuildContext context) {
-    final pancakeProvider = Provider.of<Pancakeprovider>(context);
+    final fruitProvider = Provider.of<FruitProvider>(context);
 
     Widget content = Text('');
-    if (pancakeProvider.isLoading) {
+    if (fruitProvider.isLoading) {
       content = CircularProgressIndicator();
-    } else if (pancakeProvider.hasData) {
-      List<Pancake> pancakes = pancakeProvider.pancakesState!.data!;
+    } else if (fruitProvider.hasData) {
+      List<Fruit> fruits = fruitProvider.fruitsState!.data!;
 
-      if (pancakes.isEmpty) {
+      if (fruits.isEmpty) {
         content = Text("No data yet");
       } else {
         content = ListView.builder(
-          itemCount: pancakes.length,
+          itemCount: fruits.length,
           itemBuilder:
               (context, index) => ListTile(
-                title: Text(pancakes[index].color),
-                subtitle: Text("${pancakes[index].price}"),
-                trailing: IconButton(icon: Icon(Icons.delete, color: Colors.red), onPressed: () => {}),
+                title: Text(fruits[index].color),
+                subtitle: Text("${fruits[index].price}"),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete, color: Colors.red),
+                  onPressed: () {
+                        final FruitProvider fruitProvider = context.read<FruitProvider>();
+                        fruitProvider.removeFruit(fruits[index].id); // Pass the fruit ID
+                  },
+                ),
               ),
         );
       }
@@ -184,7 +213,12 @@ class App extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        actions: [IconButton(onPressed: () => _onAddPressed(context), icon: const Icon(Icons.add))],
+        actions: [
+          IconButton(
+            onPressed: () => _onAddPressed(context),
+            icon: const Icon(Icons.add),
+          ),
+        ],
       ),
       body: Center(child: content),
     );
@@ -193,13 +227,11 @@ class App extends StatelessWidget {
 
 // 5 - MAIN
 void main() async {
-  // 1 - Create repository
-  final PancakeRepository pancakeRepository = FirebasePancakeRepository();
+  final FruitRepository fruitRepository = FirebaseFruitRepository();
 
-  // 2-  Run app
   runApp(
     ChangeNotifierProvider(
-      create: (context) => Pancakeprovider(pancakeRepository),
+      create: (context) => FruitProvider(fruitRepository),
       child: MaterialApp(debugShowCheckedModeBanner: false, home: const App()),
     ),
   );
